@@ -35,12 +35,23 @@ const iniciarCronometro = () => {
 }, 1000);
 }
 
+const pausarCronometro = () => {
+    clearInterval(cronometroId);
+    cronometroId = null;
+}
+
+
 // evento de partida
 botao.addEventListener("click", () => {
-    botao.textContent = "Ativo! ⚡";
-    display.style.color = "#61afef";
-
-    // chamada da função
-    iniciarCronometro();
+    // verifica se cronometro estar parado
+    if(cronometroId === null){
+        iniciarCronometro();
+        botao.textContent = "Pausar ⏸️"
+        display.style.color = "#61afef";
+    }else{
+        pausarCronometro();
+        botao.textContent = "Ativo!⚡";
+        display.style.color = "#ffffff";
+    }
 
 });
