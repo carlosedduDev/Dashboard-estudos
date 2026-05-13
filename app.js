@@ -28,8 +28,7 @@ const iniciarCronometro = () => {
     cronometroId = setInterval(() => {
     // verifica se minutos e segundos são 0 
     if(segundos === 0 && minutos === 0){
-        pausarCronometro();
-        display.textContent = "Iniciar ▶️";
+        resetarCronometro();
         return;
     }
     if( segundos === 0){
