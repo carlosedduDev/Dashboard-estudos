@@ -4,8 +4,10 @@ const display = document.querySelector("#tempoDisplay");
 
 // Variáveis do cronômetro
 let minutos = 0;
-let segundos = 3;
+let segundos = 5;
 let cronometroId = null; 
+let modoAtual = "foco"; 
+let ciclosConcluidos = 0;
 
 // função de renderizar
 const atualizarDisplay = () => {
@@ -29,7 +31,7 @@ const iniciarCronometro = () => {
     // verifica se minutos e segundos são 0 
     if(segundos === 0 && minutos === 0){
         emitirBeep()
-        resetarCronometro();
+        gerenciarFimDeCiclo();
         return;
     }
     if( segundos === 0){
@@ -61,6 +63,38 @@ const resetarCronometro = () => {
     botao.textContent = "Iniciar Ciclo ▶️";
     botaoReset.hidden = true;
 
+}
+
+// Função de Ciclos
+const gerenciarFimDeCiclo = () => {
+    emitirBeep(); // Aviso sonoro toca no fim
+
+    if(modoAtual === "foco"){
+        ciclosConcluidos++; // adiciona +1 ao contador
+
+        if(ciclosConcluidos === 1){
+            // Primeiro Ciclo acabou -> Descanso de 5 min
+            modoAtual = "descanso";
+            minutos = 5;
+            segundos = 0;
+        }
+        else if(ciclosConcluidos === 2){
+            // Segundo ciclo acabou
+            clearInterval(cronometroId);
+            cronometroId = null;
+            ciclosConcluidos = 0;
+            modoAtual = "foco"
+            minutos = 25;
+            segundos = 0;
+        }
+    }
+    else if(modoAtual === "descanso"){
+        // Descanso de 5 min acabou -> segundo ciclo de foco
+        modoAtual = "foco"
+        minutos = 25;
+        segundos = 0;
+    }
+    atualizarDisplay(); // Atualiza os números da tela 
 }
 
 // função para emitir o som de aviso (Buzzer)
