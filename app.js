@@ -1,10 +1,11 @@
-const botao = document.querySelector("#btnIniciar");
-const botaoReset = document.querySelector("#btnResetar")
-const display = document.querySelector("#tempoDisplay");
+const botao = document.getElementById("btnIniciar");
+const botaoReset = document.getElementById("btnResetar")
+const display = document.getElementById("tempoDisplay");
+const timerStatus = document.getElementById("timerStatus")
 
 // Variáveis do cronômetro
-let minutos = 0;
-let segundos = 5;
+let minutos = 25;
+let segundos = 0;
 let cronometroId = null; 
 let modoAtual = "foco"; 
 let ciclosConcluidos = 0;
@@ -26,6 +27,8 @@ const iniciarCronometro = () => {
     // verifica se o cronômetro já foi iniciado
     if(cronometroId !== null) return;
 
+    timerStatus.textContent = modoAtual === "foco" ? "Foco 🔥" : "Descanso ☕"
+    
     // API assíncrona (temporizador do browser)
     cronometroId = setInterval(() => {
     // verifica se minutos e segundos são 0 
@@ -50,6 +53,7 @@ const iniciarCronometro = () => {
 const pausarCronometro = () => {
     clearInterval(cronometroId);
     cronometroId = null;
+    timerStatus.textContent = "Pausado ⏯️"
 }
 
 // função de Resetar
@@ -62,6 +66,7 @@ const resetarCronometro = () => {
     //renderizar o diplay resetado
     botao.textContent = "Iniciar Ciclo ▶️";
     botaoReset.hidden = true;
+    timerStatus.textContent = "Pomodoro Pronto 🎯"
 
 }
 
@@ -77,6 +82,7 @@ const gerenciarFimDeCiclo = () => {
             modoAtual = "descanso";
             minutos = 5;
             segundos = 0;
+            timerStatus.textContent = "Descanso ☕"
         }
         else if(ciclosConcluidos === 2){
             // Segundo ciclo acabou
@@ -86,6 +92,7 @@ const gerenciarFimDeCiclo = () => {
             modoAtual = "foco"
             minutos = 25;
             segundos = 0;
+            timerStatus.textContent = "Pomodoro Pronto 🎯"
         }
     }
     else if(modoAtual === "descanso"){
@@ -93,6 +100,7 @@ const gerenciarFimDeCiclo = () => {
         modoAtual = "foco"
         minutos = 25;
         segundos = 0;
+        timerStatus.textContent = "Foco 🔥"
     }
     atualizarDisplay(); // Atualiza os números da tela 
 }
