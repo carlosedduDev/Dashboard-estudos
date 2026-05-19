@@ -3,7 +3,8 @@ const botaoReset = document.getElementById("btnResetar")
 const display = document.getElementById("tempoDisplay");
 const timerStatus = document.getElementById("timerStatus")
 const contadorPainel = document.getElementById("contadorPainel");
-const timerPrevisao = document.getElementById("timerPrevisao")
+const timerPrevisao = document.getElementById("timerPrevisao");
+const secaoEstatisticas = document.querySelector(".estatisticas");
 
 // Variáveis do cronômetro
 let minutos = 0;
@@ -29,9 +30,10 @@ const atualizarStatusTexto = () => {
         if(ciclosConcluidos === 0){
             timerStatus.textContent = "Período de foco (1 de 2)";
             timerPrevisao.innerHTML = "A seguir: <strong>5 min de intervalo</strong>";
+            botao.textContent = "Iniciar Ciclo ▶️";
         }else if(ciclosConcluidos === 1){
             timerStatus.textContent = "Período de foco (2 de 2)";
-            timerPrevisao.innerHTML = "A seguir: <strong>25 min de foco (Ciclo 1 de 2)</strong>"
+            timerPrevisao.innerHTML = "A seguir: <strong>fim do bloco</strong>"
         }
     }
     else if(modoAtual === "descanso"){
@@ -47,6 +49,8 @@ const iniciarCronometro = () => {
     if(cronometroId !== null) return;
 
     atualizarStatusTexto();
+    secaoEstatisticas.hidden = true;
+    timerPrevisao.hidden = false;
     
     // API assíncrona (temporizador do browser)
     cronometroId = setInterval(() => {
@@ -98,14 +102,14 @@ const gerenciarFimDeCiclo = () => {
     if(modoAtual === "foco"){
         ciclosConcluidos++; // adiciona +1 ao contador
         totalCiclosDoDia++; // adiciona +1 ao Ciclos totais do Dia
-        
+
         contadorPainel.textContent = totalCiclosDoDia;
 
         if(ciclosConcluidos === 1){
             // Primeiro Ciclo acabou -> Descanso de 5 min
             modoAtual = "descanso";
-            minutos = 5;
-            segundos = 0;
+            minutos = 0;
+            segundos = 5;
         }
         else if(ciclosConcluidos === 2){
             // Segundo ciclo acabou
@@ -113,15 +117,18 @@ const gerenciarFimDeCiclo = () => {
             cronometroId = null;
             ciclosConcluidos = 0;
             modoAtual = "foco"
-            minutos = 25;
-            segundos = 0;
+            minutos = 0;
+            segundos = 5;
+            secaoEstatisticas.hidden = false;
+            timerPrevisao.hidden = true;
+            
         }
     }
     else if(modoAtual === "descanso"){
         // Descanso de 5 min acabou -> segundo ciclo de foco
         modoAtual = "foco"
-        minutos = 25;
-        segundos = 0;
+        minutos = 0;
+        segundos = 5;
     }
     atualizarDisplay(); // Atualiza os números da tela 
     atualizarStatusTexto();

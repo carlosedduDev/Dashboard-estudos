@@ -110,6 +110,14 @@ button {
     color: var(--texto-suave);
     margin-top: 20px;
 }
+#timerStatus {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--texto-principal);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+
+}
 #timerPrevisao {
     text-align: center;
     color: var(--texto-suave);
