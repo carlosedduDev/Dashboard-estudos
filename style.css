@@ -95,7 +95,7 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 0;
 }
 /* A caixa que junta o relógio e as setas lado a lado */
 #cronometro-container {
@@ -107,7 +107,7 @@ button {
     border-radius: 12px; /* Cantos arredondados finos */
     padding: 10px 20px;
     width: fit-content; /* A caixa só abraça o tamanho do conteúdo */
-    margin: 20px auto;
+    margin: 10px auto;
 }
 #tempoDisplay {
     font-size: 4rem;
@@ -124,7 +124,7 @@ button {
     padding-left: 10px;
     margin-left: 20px;
 
-    transition: opacity 0.03s ease, visibility 0.3s ease, width 0.3s ease, margin 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, width 0.3s ease, margin 0.3s ease;
     opacity: 1;
     visibility: visible;
     width: auto;
@@ -143,7 +143,7 @@ button {
     border: none;
     color: var(--texto-suave); /* Cor cinza discreta para não brigar com o relógio */
     font-size: 16px;
-    padding: 8px 12px;
+    padding: 6px 12px;
     cursor: pointer;
     transition: color 0.2s, background-color 0.2s;
     border-radius: 6px;
@@ -156,21 +156,21 @@ button {
 .estatisticas {
     text-align: center;
     color: var(--texto-suave);
-    margin-top: 20px;
+    margin-top: 15px;
 }
 #timerStatus {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--texto-principal);
     letter-spacing: 0.5px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 
 }
 #timerPrevisao {
     text-align: center;
     color: var(--texto-suave);
     font-size: 0.9rem;
-    margin-top: 5px;
+    margin-top: 12px;
 }
 #timerPrevisao strong {
     color: var(--texto-principal);
