@@ -10,12 +10,13 @@ const timerPrevisao = document.getElementById("timerPrevisao");
 const secaoEstatisticas = document.querySelector(".estatisticas");
 
 
-// Variáveis do cronômetro
+// Variáveis De Controle Simples
 const isTestMode = false;
 let TEMPO_FOCO_MIN = isTestMode ? 0 : 25;
 let TEMPO_FOCO_SEG = isTestMode ? 5 : 0;
-let minimo = 20;
+let minimo = 10;
 let maximo = 120;
+
 let minutos = TEMPO_FOCO_MIN
 let segundos = TEMPO_FOCO_SEG
 let cronometroId = null; 
@@ -23,18 +24,14 @@ let modoAtual = "foco";
 let ciclosConcluidos = 0;
 let totalCiclosDoDia = 0;
 
-// função de renderizar
+// Renderizar o cronômetro na tela
 const atualizarDisplay = () => {
-
-    // variáveis que recebem minutos e segundos formatados
     let minutosFormatados = minutos.toString().padStart(2, "0");
     let segundosFormatados = segundos.toString().padStart(2, "0");
-
-    // renderiza o cronômetro
     display.textContent = `${minutosFormatados}:${segundosFormatados}`;
 }
 
-// Função de atualizar Texto
+// Controla as mensagens no painel orientando o usuário
 const atualizarStatusTexto = () => {
     if(modoAtual === "foco"){
         if(ciclosConcluidos === 0){
@@ -57,19 +54,20 @@ const atualizarStatusTexto = () => {
     }
 }
 
-// função cronômetro
+// Temporizador assíncrono do navegador
 const iniciarCronometro = () => {
 
     // verifica se o cronômetro já foi iniciado
     if(cronometroId !== null) return;
+    if(TEMPO_FOCO_MIN >= 60 && ciclosConcluidos === 0){
+        minutos = TEMPO_FOCO_MIN / 2;
+    }
 
     atualizarStatusTexto();
     secaoEstatisticas.hidden = true;
     timerPrevisao.hidden = false;
     painelSetas.classList.add("escondido")
 
-    
-    // API assíncrona (temporizador do browser)
     cronometroId = setInterval(() => {
     // verifica se minutos e segundos são 0 
     if(segundos === 0 && minutos === 0){
@@ -88,17 +86,13 @@ const iniciarCronometro = () => {
 
 }, 1000);
 }
-
-// função de pausar
+// Função de pausar
 const pausarCronometro = () => {
     clearInterval(cronometroId);
     cronometroId = null;
     timerPrevisao.textContent = "Em Pausa";
-
-
 }
-
-// função de Resetar
+// Função de reset
 const resetarCronometro = () => {
     clearInterval(cronometroId);
     minutos = TEMPO_FOCO_MIN;
@@ -115,7 +109,6 @@ const resetarCronometro = () => {
     painelSetas.classList.remove("escondido");
     timerPrevisao.innerHTML = "<strong>Você terá apenas 1 intervalo</strong>"
 }
-
 // Função de Ciclos
 const gerenciarFimDeCiclo = () => {
     emitirBeep(); // Aviso sonoro toca no fim
@@ -152,17 +145,19 @@ const gerenciarFimDeCiclo = () => {
         }
     }
     else if(modoAtual === "descanso"){
-        // Descanso de 5 min acabou -> segundo ciclo de foco
+        // Descanso acabou volta para segundo bloco
         modoAtual = "foco"
-        minutos = TEMPO_FOCO_MIN;
+        if(TEMPO_FOCO_MIN >= 60){
+            minutos = isTestMode ? 0 : TEMPO_FOCO_MIN/2;
+        }else{
+            minutos = TEMPO_FOCO_MIN;
+        }
         segundos = TEMPO_FOCO_SEG;
     }
-
-    atualizarDisplay(); // Atualiza os números da tela 
+    atualizarDisplay();  
     atualizarStatusTexto();
 }
-
-// função para emitir o som de aviso (Buzzer)
+// Função de aviso sonoro
 const emitirBeep = () => {
     // 1. Cria o contexto de áudio do navegador
     const contexto = new (window.AudioContext || window.webkitAudioContext)();
@@ -187,25 +182,29 @@ const emitirBeep = () => {
     }, 200);
 }
 
-// Acrecenta 5 min no cronometro
+// Evento de click da setas
 btnAumentar.addEventListener("click", () =>{
     if(TEMPO_FOCO_MIN < maximo){
-        TEMPO_FOCO_MIN += 5;
+        if(TEMPO_FOCO_MIN >= 60){
+            TEMPO_FOCO_MIN += 10;
+        }else{
+            TEMPO_FOCO_MIN += 5;
+        }
         minutos = TEMPO_FOCO_MIN;
         atualizarDisplay();
     }
 })
-
-// Decrescenta 5 min do cronometro
 btnDiminuir.addEventListener("click", () =>{
-    if(TEMPO_FOCO_MIN > 20){
-        TEMPO_FOCO_MIN -= 5;
+    if(cronometroId === null && TEMPO_FOCO_MIN > minimo){
+        if(TEMPO_FOCO_MIN > 60){
+            TEMPO_FOCO_MIN -= 10;
+        }else{
+            TEMPO_FOCO_MIN -= 5;
+        }
         minutos = TEMPO_FOCO_MIN;
         atualizarDisplay();
     }
 })
-
-// Evento de partida
 botaoIniciar.addEventListener("click", () => {
     // verifica se cronometro estar parado
     if(cronometroId === null){
@@ -224,8 +223,6 @@ botaoIniciar.addEventListener("click", () => {
     }
 
 });
-
-// Evento de resetar
 botaoReset.addEventListener("click", () => {
     resetarCronometro();
-})
+});
